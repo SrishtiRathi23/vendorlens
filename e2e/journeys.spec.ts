@@ -4,6 +4,7 @@ import type { DraftResponse, ExtractResponse } from "@/domain/contracts";
 import { emptyQuote } from "@/domain/extraction";
 import { sequentialIds } from "@/domain/ids";
 import { TEMPLATE_DRAFTS } from "@/domain/templates";
+import { settle } from "./settle";
 
 /** Every AI route is answered by the test, so E2E never reaches the live model. */
 async function mockAi(page: Page, answers: Partial<Record<"draft" | "adjust" | "extract", unknown>>) {
@@ -180,6 +181,7 @@ for (const path of [
     await openSample(page, "wedding");
     await page.goto(path);
     await expect(page.locator("h1")).toHaveCount(1);
+    await settle(page);
     const { violations } = await new AxeBuilder({ page })
       .withTags(["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"])
       .analyze();

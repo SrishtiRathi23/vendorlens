@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond, Space_Grotesk } from "next/font/google";
 import { PlanProvider } from "@/features/store/plan-store";
+import { Interactions } from "@/ui/Interactions";
 import "./globals.css";
 
 const grotesk = Space_Grotesk({ subsets: ["latin"], variable: "--font-grotesk", display: "swap" });
@@ -33,6 +34,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           Skip to main content
         </a>
         <PlanProvider>{children}</PlanProvider>
+        <Interactions />
       </body>
     </html>
   );

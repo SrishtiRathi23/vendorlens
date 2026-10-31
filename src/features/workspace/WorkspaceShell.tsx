@@ -46,6 +46,7 @@ export function WorkspaceShell({ children }: { children: ReactNode }) {
         <p>Plans are stored in this browser. Start a new one, or open a sample to look around.</p>
         <Link
           href="/new"
+          data-magnetic=""
           className="inline-flex min-h-11 w-fit items-center rounded-md bg-forest px-5 font-medium text-ivory hover:bg-emerald"
         >
           Plan my event
@@ -86,7 +87,7 @@ export function WorkspaceShell({ children }: { children: ReactNode }) {
                     <Link
                       href={tab.href}
                       aria-current={current ? "page" : undefined}
-                      className={`inline-flex min-h-11 items-center rounded-md px-3 text-sm font-medium ${current ? "bg-forest text-ivory" : "text-forest hover:bg-sage"}`}
+                      className={`inline-flex min-h-11 items-center rounded-md px-3 text-sm font-medium transition-colors duration-200 ${current ? "bg-forest text-ivory" : "text-forest hover:bg-sage"}`}
                     >
                       {tab.label}
                     </Link>
@@ -97,7 +98,7 @@ export function WorkspaceShell({ children }: { children: ReactNode }) {
           </nav>
         </header>
         <AdjustBar />
-        <main id="content" className="flex flex-col gap-6">
+        <main id="content" className="page-enter flex flex-col gap-6">
           {children}
         </main>
       </div>
