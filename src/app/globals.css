@@ -1,0 +1,50 @@
+@import "tailwindcss";
+
+/*
+ * The Merchant's Desk. Contrast measured against WCAG 2.x:
+ *   forest/ivory 11.8 · charcoal/ivory 13.8 · emerald/ivory 5.9 · ivory/emerald 5.9 · brick/ivory 5.9
+ *   forest on saffron 6.2 (saffron is a surface colour; saffron text on ivory is only 1.9, never use it)
+ *   coral/ivory 3.2: borders, rules and large display accents only, never body text
+ */
+@theme {
+  --color-ivory: #faf7ec;
+  --color-forest: #20382b;
+  --color-emerald: #316b4c;
+  --color-saffron: #e5ad3e;
+  --color-coral: #d76a4e;
+  --color-cream: #eae7dd;
+  --color-charcoal: #252923;
+  --color-sage: #dde6d8;
+  --color-brick: #a63d2e;
+
+  --font-display: var(--font-cormorant), "Iowan Old Style", Georgia, serif;
+  --font-sans: var(--font-grotesk), system-ui, "Segoe UI", sans-serif;
+}
+
+@layer base {
+  html {
+    background: var(--color-ivory);
+    color: var(--color-charcoal);
+    font-family: var(--font-sans);
+  }
+
+  /* Focus ring stays inside the palette: no browser-default blue anywhere. */
+  :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+    outline: 3px solid var(--color-emerald);
+    outline-offset: 3px;
+  }
+
+  .figures {
+    font-variant-numeric: tabular-nums lining-nums;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html *,
+  html *::before,
+  html *::after {
+    transition: none !important;
+    animation: none !important;
+    scroll-behavior: auto !important;
+  }
+}

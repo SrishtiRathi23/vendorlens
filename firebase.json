@@ -1,0 +1,8 @@
+{
+  "hosting": {
+    "site": "vendorlens-promptwars",
+    "public": "firebase/public",
+    "ignore": ["firebase.json", "**/.*"],
+    "rewrites": [{ "source": "**", "run": { "serviceId": "vendorlens", "region": "asia-south1" } }]
+  }
+}

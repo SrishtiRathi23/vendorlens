@@ -1,0 +1,52 @@
+{
+  "name": "vendorlens-promptwars",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "node scripts/serve-standalone.mjs",
+    "lint": "eslint . --max-warnings=0",
+    "typecheck": "next typegen && tsc -p tsconfig.json --noEmit",
+    "deadcode": "knip",
+    "fmt": "prettier --write .",
+    "fmt:check": "prettier --check .",
+    "test": "vitest run",
+    "coverage": "vitest run --coverage",
+    "e2e": "playwright test",
+    "secrets": "node scripts/find-secrets.mjs",
+    "secrets:bundle": "node scripts/find-secrets.mjs .next/static",
+    "verify": "npm run lint && npm run typecheck && npm run deadcode && npm run fmt:check && npm run coverage"
+  },
+  "dependencies": {
+    "next": "16.4.3",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "server-only": "^0.0.1",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.14.0",
+    "@playwright/test": "^1.64.1",
+    "@tailwindcss/turbopack": "^4",
+    "@types/node": "^22.20.5",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "@vitejs/plugin-react": "^6.1.2",
+    "@vitest/coverage-v8": "^5.0.5",
+    "eslint": "^9",
+    "eslint-config-next": "16.4.3",
+    "knip": "^6.44.1",
+    "prettier": "^3.9.10",
+    "tailwindcss": "^4",
+    "typescript": "^5",
+    "typescript-eslint": "^8.72.1",
+    "vite-tsconfig-paths": "^6.1.1",
+    "vitest": "^5.0.5"
+  },
+  "description": "VendorLens: plan a celebration and compare vendor quotes on what they really cost.",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22.12"
+  }
+}

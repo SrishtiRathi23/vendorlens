@@ -1,0 +1,12 @@
+# Upload filter for `gcloud run deploy --source` (the image itself is filtered by .dockerignore).
+.gcloudignore
+.git
+.github
+#!include:.gitignore
+e2e
+tests
+docs
+firebase
+playwright-report
+test-results
+coverage
