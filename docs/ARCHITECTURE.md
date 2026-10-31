@@ -35,3 +35,18 @@ The browser holds all user data: events, requirements, pasted quotes, confirmed 
 ## Limits that are stated honestly
 
 Cloud Run runs with min 0 and max 1 instance, so the in-memory rate limits and caches added later apply to that single instance. Abuse protection across instances or regions would need a shared store, which is out of scope.
+
+## Deploying
+
+The project `vendorlens-pw-10311639` has two service accounts: `vendorlens-run` (runtime, `roles/aiplatform.user`) and `vendorlens-build` (Cloud Build, `roles/run.builder`).
+
+```bash
+gcloud run deploy vendorlens --source . --region asia-south1 --project vendorlens-pw-10311639 \
+  --allow-unauthenticated --min-instances 0 --max-instances 1 --cpu 1 --memory 512Mi --concurrency 20 --timeout 30s \
+  --service-account vendorlens-run@vendorlens-pw-10311639.iam.gserviceaccount.com \
+  --build-service-account projects/vendorlens-pw-10311639/serviceAccounts/vendorlens-build@vendorlens-pw-10311639.iam.gserviceaccount.com \
+  --set-env-vars AI_ENABLED=true,AI_PROVIDER=vertex,GOOGLE_CLOUD_PROJECT=vendorlens-pw-10311639,GOOGLE_CLOUD_LOCATION=global,GEMINI_MODEL=gemini-3.5-flash-lite,GEMINI_FALLBACK_MODEL=gemini-3.1-flash-lite,ALLOWED_ORIGINS=https://vendorlens-promptwars.web.app
+firebase deploy --only hosting --project vendorlens-pw-10311639   # rewrites everything to the service (firebase.json)
+```
+
+Setting `AI_ENABLED=false` switches every AI route off at once. The app keeps working with templates, samples and manual quotes.

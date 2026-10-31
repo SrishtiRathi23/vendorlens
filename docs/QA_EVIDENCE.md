@@ -1,23 +1,23 @@
 # Evidence checklist
 
-✅ proven by a command or test that was run · ⏳ arrives in a later phase
+✅ proven by a command, test or live check that was run · ⚠️ partly checked (see note)
 
-| Category      | What is checked                                                | State | Proof                                                       |
-| ------------- | -------------------------------------------------------------- | ----- | ----------------------------------------------------------- |
-| Code quality  | Type-aware lint with zero warnings                             | ✅    | `npm run lint`                                              |
-| Code quality  | Import boundaries for `src/domain` and browser code            | ✅    | `eslint.config.mjs`; lint passes                            |
-| Code quality  | No dead files, exports or packages                             | ✅    | `npm run deadcode` (knip)                                   |
-| Security      | No credential patterns in committed files or the client bundle | ✅    | `npm run secrets`, `npm run secrets:bundle`; gitleaks in CI |
-| Security      | Configuration errors never contain values                      | ✅    | `tests/server/env.test.ts`, `tests/server/health.test.ts`   |
-| Security      | Recorded-response AI provider refused in production            | ✅    | `tests/server/env.test.ts`                                  |
-| Security      | Baseline response headers, locally and live                    | ✅    | `e2e/landing.spec.ts`; live probe in the build journal      |
-| Security      | Per-request nonce CSP                                          | ⏳    | hardening phase                                             |
-| Security      | Production dependencies free of high or critical advisories    | ✅    | `npm audit --omit=dev`                                      |
-| Testing       | Coverage gate (90% lines on `src/domain`, `src/server`)        | ✅    | `npm run coverage`                                          |
-| Accessibility | axe has no serious or critical findings on desktop or phone    | ✅    | `e2e/landing.spec.ts`                                       |
-| Accessibility | No page-wide horizontal scroll at 320, 390, 768 and 1440 px    | ✅    | `e2e/landing.spec.ts`                                       |
-| Accessibility | Skip link moves focus to the content                           | ✅    | `e2e/landing.spec.ts`                                       |
-| Deployment    | Container builds on Cloud Build                                | ✅    | revision `vendorlens-00001-wpm`                             |
-| Deployment    | Live health on Cloud Run and through Firebase Hosting          | ✅    | build journal, Phase 0                                      |
-| Alignment     | Weddings, birthdays and community events from brief to plan    | ⏳    | Phases 1–4                                                  |
-| Alignment     | Quote extraction with evidence, review and honest comparison   | ⏳    | Phases 2–4                                                  |
+| Category      | What is checked                                                                 | State | Proof                                                                |
+| ------------- | ------------------------------------------------------------------------------- | ----- | -------------------------------------------------------------------- |
+| Code quality  | Type-aware lint with zero warnings; import boundaries; no dead code; formatting | ✅    | `npm run verify`                                                     |
+| Security      | No credentials in the repo or the client bundle                                 | ✅    | `npm run secrets`, `npm run secrets:bundle`, gitleaks in CI          |
+| Security      | Keyless AI (service account, no key)                                            | ✅    | live `/api/health` reports provider `vertex`; no key variable is set |
+| Security      | Origin, rate and size guards on AI routes                                       | ✅    | `tests/server/*`; live 403 and 400; 429 seen live                    |
+| Security      | Prompt injection cannot change prices, verification or secrets                  | ✅    | Q09–Q11 tests; live injected quote                                   |
+| Security      | Nonce CSP and security headers                                                  | ✅    | `e2e/landing.spec.ts`                                                |
+| Security      | Production dependencies                                                         | ✅    | `npm audit --omit=dev`: 0                                            |
+| Efficiency    | No AI calls while editing or comparing                                          | ✅    | `e2e/journeys.spec.ts` (Q23)                                         |
+| Efficiency    | Cache and in-flight dedupe                                                      | ✅    | Q19; live repeat in 0.46 s                                           |
+| Testing       | Coverage gates (90% lines, 85% branches)                                        | ✅    | 98.5% / 89.9%                                                        |
+| Testing       | Browser journeys for all three event kinds and the hero flow                    | ✅    | 40 Playwright tests                                                  |
+| Accessibility | axe has 0 serious or critical findings on all routes, desktop and phone         | ✅    | `e2e/journeys.spec.ts`                                               |
+| Accessibility | Keyboard: skip link, focus on errors, Escape closes dialogs                     | ✅    | `e2e/*`                                                              |
+| Accessibility | Screen reader and 200% zoom pass                                                | ⚠️    | Not yet done by hand                                                 |
+| Deployment    | Cloud Run build and live health                                                 | ✅    | revision `vendorlens-00003-6c5`                                      |
+| Deployment    | Firebase Hosting front door                                                     | ✅    | https://vendorlens-promptwars.web.app                                |
+| Alignment     | Live AI drafts for a wedding, a birthday and a community event                  | ✅    | `docs/TESTING.md`                                                    |

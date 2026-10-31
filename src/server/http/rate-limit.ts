@@ -6,7 +6,7 @@ export interface RateLimits {
   globalPerDay: number;
 }
 
-const DEFAULT_LIMITS: RateLimits = { perClientPerMinute: 5, perClientPerDay: 30, globalPerDay: 400 };
+const DEFAULT_LIMITS: RateLimits = { perClientPerMinute: 10, perClientPerDay: 60, globalPerDay: 600 };
 
 const MINUTE = 60_000;
 const DAY = 86_400_000;

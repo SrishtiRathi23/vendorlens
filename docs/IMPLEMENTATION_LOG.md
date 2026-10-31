@@ -33,4 +33,25 @@ What each phase delivered, the commands that proved it, and what's still open. E
 | Response headers                                                 | `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Referrer-Policy: same-origin`, `Cross-Origin-Opener-Policy: same-origin` |
 | A `/_next/static` chunk                                          | `public, max-age=31536000, immutable`                                                                                                 |
 
-**Next:** Phase 1, the money and quote domain with property tests.
+## Full build: planner, quote comparison, AI and hardening (31 Oct 2026)
+
+**Delivered**
+
+- **Domain** (`src/domain`, pure): money in paise, largest-remainder allocation, IST dates, category and coverage vocabulary, number reading (₹, Rs., lakh, crore), evidence verification, quote normalisation and comparison, payment milestones, vendor questions, plan building from a draft, AI adjustments with lock and scope rules, diffs, budget and timeline views, `.ics` and Google Calendar and Maps links, templates and fictional samples.
+- **AI** (`src/server/ai`): keyless Gemini on Vertex AI with structured JSON; per task, Zod, rules, one repair, fallback model, contact redaction, output scrubbing, LRU cache with in-flight dedupe; same-origin, rate and size guards on `/api/ai/{draft,adjust,extract}`.
+- **App:** landing with a live sample comparison, a 3-step wizard, and the Overview, Budget, Vendors (quote intake and evidence review), Compare, Timeline, Ideas and Privacy screens; Adjust with AI with preview and undo; IndexedDB autosave, backup and import, print.
+- **Hardening:** per-request nonce CSP (`src/proxy.ts`) with dynamic rendering; 40 browser journeys with axe.
+
+**Found and fixed by running things**
+
+| Finding                                                                 | Fix                                                                                                                                                              |
+| ----------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Vertex AI rejected every response schema (HTTP 400)                     | Bounds removed from the copy sent to Gemini; Zod still enforces them                                                                                             |
+| The model wrote validity dates as phrases                               | Text fields in AI answers are clipped, and invalid dates become unknown                                                                                          |
+| "Minimum 100 plates" was used as the quantity for a 150-guest event     | Per-guest prices always use the event's guest count; the quote's assumption is shown as a mismatch                                                               |
+| "Balance on the event day" was dropped because the figure isn't written | Remainder wording no longer needs the figure; the schedule must still sum to 100%                                                                                |
+| A reload within 250 ms lost the newest plan (found by E2E)              | Plans are saved on every change                                                                                                                                  |
+| Live drafts sometimes failed validation                                 | Cloud Logging showed over-strict rules; required categories and list minimums relaxed (prompt 2026-10-31.2). All three kinds then succeeded on the first attempt |
+| Choosing "amount stated" for a cost set ₹0 before any amount was typed  | The cost stays unknown until a valid amount is entered                                                                                                           |
+
+**Evidence:** 123 unit tests (98.5% lines, 89.9% branches), 40 E2E journeys passing, 0 audit findings, clean secret scans. Live revision `vendorlens-00003-6c5` checked through Firebase Hosting; see [TESTING.md](TESTING.md#live-checks-against-the-deployed-service).
