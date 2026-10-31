@@ -78,7 +78,8 @@ export async function runTask<Req, Out, Res>(
       const first = evaluate(spec, await call(model, prompt), request);
       if (first.ok) return { data: spec.finish(first.output, request), model, repaired: false };
 
-      logEvent("ai_repair", { task: spec.name, model, problems: first.problems.length });
+      // Problems hold rule ids and field paths only (never user or model text), so they are safe to log.
+      logEvent("ai_repair", { task: spec.name, model, problems: first.problems.join("; ").slice(0, 300) });
       const repairPrompt = `${prompt}\n\nYour previous answer was rejected for these reasons:\n- ${first.problems.join("\n- ")}\nReturn a corrected answer.`;
       const second = evaluate(spec, await call(model, repairPrompt), request);
       if (second.ok) return { data: spec.finish(second.output, request), model, repaired: true };

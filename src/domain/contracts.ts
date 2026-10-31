@@ -21,6 +21,12 @@ import {
 const text = (max: number) => z.string().max(max);
 /** Model answers are clipped rather than rejected when a free-text field runs long. */
 const aiText = (max: number) => z.string().transform((value) => value.slice(0, max));
+/** Lists in model answers are trimmed to their maximum (minimums still apply) rather than rejected. */
+const aiList = <T extends z.ZodType>(item: T, max: number, min = 0) =>
+  z
+    .array(item)
+    .min(min)
+    .transform((items) => items.slice(0, max));
 
 // ---- Plan draft ---------------------------------------------------------------------------
 
@@ -42,64 +48,61 @@ export const EventBriefSchema = z.object({
 
 export const PlanDraftAiSchema = z.object({
   summary: aiText(400),
-  categories: z
-    .array(z.object({ key: CategoryKeySchema, weightBp: z.number().int().min(0).max(10_000), rationale: aiText(200) }))
-    .min(3)
-    .max(8),
-  requirements: z
-    .array(
-      z.object({
-        ref: aiText(4),
-        category: CategoryKeySchema,
-        label: aiText(80),
-        required: z.boolean(),
-        coverageTags: z.array(aiText(30)).max(8),
-        why: aiText(200),
-        questions: z.array(aiText(160)).min(1).max(5),
-        bookByLeadDays: z.number().int().min(0).max(730),
-        priority: PrioritySchema,
-      }),
-    )
-    .min(3)
-    .max(16),
-  tasks: z
-    .array(
-      z.object({
-        ref: aiText(4),
-        title: aiText(100),
-        category: CategoryKeySchema.nullable(),
-        leadDays: z.number().int().min(0).max(730),
-        priority: PrioritySchema,
-        dependsOn: z.array(aiText(4)).max(4),
-      }),
-    )
-    .min(4)
-    .max(30),
-  ideas: z
-    .array(
-      z.object({
-        section: IdeaSectionSchema,
-        title: aiText(80),
-        description: aiText(300),
-        whyItFits: aiText(200),
-        dietTags: z.array(DietTagSchema).max(7),
-      }),
-    )
-    .min(6)
-    .max(24),
-  dayOf: z
-    .array(
-      z.object({
-        startMinute: z.number().int().min(-720).max(1440),
-        durationMinutes: z.number().int().min(5).max(600),
-        title: aiText(80),
-        ownerRole: aiText(40),
-      }),
-    )
-    .min(3)
-    .max(20),
-  assumptions: z.array(aiText(200)).max(6),
-  openQuestions: z.array(aiText(200)).max(5),
+  categories: aiList(
+    z.object({ key: CategoryKeySchema, weightBp: z.number().int().min(0).max(10_000), rationale: aiText(200) }),
+    8,
+    3,
+  ),
+  requirements: aiList(
+    z.object({
+      ref: aiText(4),
+      category: CategoryKeySchema,
+      label: aiText(80),
+      required: z.boolean(),
+      coverageTags: aiList(aiText(30), 8),
+      why: aiText(200),
+      questions: aiList(aiText(160), 5, 1),
+      bookByLeadDays: z.number().int().min(0).max(730),
+      priority: PrioritySchema,
+    }),
+    16,
+    3,
+  ),
+  tasks: aiList(
+    z.object({
+      ref: aiText(4),
+      title: aiText(100),
+      category: CategoryKeySchema.nullable(),
+      leadDays: z.number().int().min(0).max(730),
+      priority: PrioritySchema,
+      dependsOn: aiList(aiText(4), 4),
+    }),
+    30,
+    4,
+  ),
+  ideas: aiList(
+    z.object({
+      section: IdeaSectionSchema,
+      title: aiText(80),
+      description: aiText(300),
+      whyItFits: aiText(200),
+      dietTags: aiList(DietTagSchema, 7),
+    }),
+    24,
+    6,
+  ),
+  dayOf: aiList(
+    z.object({
+      startMinute: z.number().int().min(-720).max(1440),
+      durationMinutes: z.number().int().min(5).max(600),
+      title: aiText(80),
+      ownerRole: aiText(40),
+    }),
+    20,
+    3,
+  ),
+  assumptions: aiList(aiText(200), 6),
+  openQuestions: aiList(aiText(200), 5),
 });
 
 // ---- Adjust ---------------------------------------------------------------------------------
@@ -137,14 +140,14 @@ const AdjustOperationAiSchema = z.object({
   detail: aiText(300).nullable(),
   priority: PrioritySchema.nullable(),
   required: z.boolean().nullable(),
-  coverageTags: z.array(aiText(30)).max(8).nullable(),
+  coverageTags: aiList(aiText(30), 8).nullable(),
   section: IdeaSectionSchema.nullable(),
 });
 
 export const AdjustAiSchema = z.object({
   interpretation: aiText(300),
-  operations: z.array(AdjustOperationAiSchema).max(15),
-  cannotDo: z.array(aiText(200)).max(6),
+  operations: aiList(AdjustOperationAiSchema, 15),
+  cannotDo: aiList(aiText(200), 6),
 });
 
 /** A compact, contact-free view of the plan with short refs (R1, T1, I1, D1) instead of ids. */
@@ -193,19 +196,18 @@ const costTermAi = z.object({
 export const ExtractionAiSchema = z.object({
   currency: aiText(10),
   vendorAlias: z.object({ value: aiText(80).nullable(), evidence }),
-  lines: z
-    .array(
-      z.object({
-        description: aiText(120),
-        basis: z.enum(["flat", "per_guest", "per_hour", "per_unit"]),
-        unitRupees: z.number().min(0).nullable(),
-        quantity: z.number().int().min(0).nullable(),
-        evidence,
-      }),
-    )
-    .max(30),
-  inclusions: z.array(z.object({ tag: aiText(30), evidence })).max(20),
-  exclusions: z.array(z.object({ text: aiText(160), evidence })).max(20),
+  lines: aiList(
+    z.object({
+      description: aiText(120),
+      basis: z.enum(["flat", "per_guest", "per_hour", "per_unit"]),
+      unitRupees: z.number().min(0).nullable(),
+      quantity: z.number().int().min(0).nullable(),
+      evidence,
+    }),
+    30,
+  ),
+  inclusions: aiList(z.object({ tag: aiText(30), evidence }), 20),
+  exclusions: aiList(z.object({ text: aiText(160), evidence }), 20),
   tax: z.object({
     mode: z.enum(["included", "exclusive_known", "exclusive_unknown", "unknown"]),
     ratePercent: z.number().min(0).max(50).nullable(),
@@ -215,21 +217,20 @@ export const ExtractionAiSchema = z.object({
   transport: costTermAi,
   staffing: costTermAi,
   setup: costTermAi,
-  paymentSchedule: z
-    .array(
-      z.object({
-        percent: z.number().min(0).max(100),
-        when: PaymentWhenSchema,
-        days: z.number().int().min(0).max(365).nullable(),
-        evidence,
-      }),
-    )
-    .max(6),
+  paymentSchedule: aiList(
+    z.object({
+      percent: z.number().min(0).max(100),
+      when: PaymentWhenSchema,
+      days: z.number().int().min(0).max(365).nullable(),
+      evidence,
+    }),
+    6,
+  ),
   depositRefundable: z.object({ value: z.enum(["yes", "no", "unknown"]), evidence }),
   cancellation: z.object({ value: aiText(400).nullable(), evidence }),
   validUntil: z.object({ value: aiText(40).nullable(), evidence }),
   guestCountAssumed: z.object({ value: z.number().int().min(1).nullable(), evidence }),
-  suggestedQuestions: z.array(aiText(200)).max(3),
+  suggestedQuestions: aiList(aiText(200), 3),
 });
 
 export const ExtractRequestSchema = z.object({

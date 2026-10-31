@@ -149,6 +149,16 @@ describe("runTask", () => {
     expect(result.data.cannotDo.at(-1)).toContain("Ignored 1 change");
   });
 
+  it("trims over-long lists and text in a model answer instead of rejecting the whole plan", async () => {
+    const chatty = structuredClone(TEMPLATE_DRAFTS.wedding);
+    chatty.ideas = Array.from({ length: 30 }, (_, i) => ({ ...firstOf(chatty.ideas), title: `Idea ${String(i)}` }));
+    chatty.summary = "x".repeat(900);
+    const result = await runTask(draftTask, brief, { config, generate: scripted(chatty) });
+    expect(result.repaired).toBe(false);
+    expect(result.data.draft.ideas).toHaveLength(24);
+    expect(result.data.draft.summary).toHaveLength(400);
+  });
+
   it("serves recorded answers with the fixture provider, without calling a model", async () => {
     const generate = scripted();
     const result = await runTask(draftTask, brief, { config: { ...config, aiProvider: "fixture" }, generate });
