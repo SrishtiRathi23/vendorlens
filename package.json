@@ -19,6 +19,8 @@
     "verify": "npm run lint && npm run typecheck && npm run deadcode && npm run fmt:check && npm run coverage"
   },
   "dependencies": {
+    "@google/genai": "^2.32.0",
+    "idb": "^8.0.4",
     "next": "16.4.3",
     "react": "19.3.0",
     "react-dom": "19.3.0",
@@ -36,12 +38,12 @@
     "@vitest/coverage-v8": "^5.0.5",
     "eslint": "^9",
     "eslint-config-next": "16.4.3",
+    "fast-check": "^4.10.2",
     "knip": "^6.44.1",
     "prettier": "^3.9.10",
     "tailwindcss": "^4",
     "typescript": "^5",
     "typescript-eslint": "^8.72.1",
-    "vite-tsconfig-paths": "^6.1.1",
     "vitest": "^5.0.5"
   },
   "description": "VendorLens: plan a celebration and compare vendor quotes on what they really cost.",

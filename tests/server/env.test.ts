@@ -30,6 +30,12 @@ describe("readConfig", () => {
     expect(config.geminiApiKey).toBeUndefined();
   });
 
+  it("reads an optional fallback model", () => {
+    expect(readConfig({ ...vertexReady, GEMINI_FALLBACK_MODEL: "flash-lite-older" }).geminiFallbackModel).toBe(
+      "flash-lite-older",
+    );
+  });
+
   it.each([
     ["Vertex without model or project", { AI_ENABLED: "true" }, ["GEMINI_MODEL", "GOOGLE_CLOUD_PROJECT"]],
     [

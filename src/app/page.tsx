@@ -1,3 +1,11 @@
+import Link from "next/link";
+import { compareQuotes } from "@/domain/compare";
+import { sequentialIds } from "@/domain/ids";
+import { normalizeQuote } from "@/domain/quote-normalize";
+import { buildSampleEvent } from "@/domain/samples";
+import { CompareTable } from "@/features/compare/CompareTable";
+import { SampleLauncher } from "@/features/samples/SampleLauncher";
+
 const steps = [
   {
     verb: "Read",
@@ -16,23 +24,57 @@ const steps = [
   },
 ];
 
+/** The landing comparison uses the real engine on the fictional sample quotes (built at render, no AI). */
+function sampleComparison() {
+  const reference = "2026-01-01";
+  const event = buildSampleEvent("wedding", reference, sequentialIds("landing"));
+  const context = {
+    guestCount: event.guestCount,
+    eventDate: event.date,
+    today: reference,
+    requirements: event.requirements,
+  };
+  return compareQuotes(event.quotes.map((quote) => normalizeQuote(quote, context)));
+}
+
 export default function LandingPage() {
+  const comparison = sampleComparison();
   return (
     <div className="mx-auto max-w-5xl px-4 sm:px-6">
-      <header className="flex items-baseline justify-between border-b border-cream py-5">
+      <header className="flex flex-wrap items-baseline justify-between gap-2 border-b border-cream py-5">
         <span className="font-display text-2xl font-semibold text-forest">VendorLens</span>
-        <span className="text-sm text-emerald">Weddings · Birthdays · Community events</span>
+        <nav aria-label="Site" className="flex gap-4 text-sm">
+          <Link className="text-emerald underline underline-offset-4" href="/workspace">
+            My plan
+          </Link>
+          <Link className="text-emerald underline underline-offset-4" href="/privacy">
+            Privacy & AI use
+          </Link>
+        </nav>
       </header>
 
-      <main id="content" className="py-14">
-        <h1 className="max-w-3xl font-display text-5xl leading-[1.05] font-semibold text-forest sm:text-7xl">
-          The cheapest quote isn&apos;t always the cheapest event.
-        </h1>
-        <p className="mt-6 max-w-2xl text-lg leading-relaxed">
-          Plan your budget, timeline and vendor checklist, then compare offers on what they actually include.
-        </p>
+      <main id="content" className="flex flex-col gap-12 py-12">
+        <section className="flex flex-col gap-6">
+          <p className="text-sm font-medium text-emerald">Weddings · Birthdays · Community events</p>
+          <h1 className="max-w-3xl font-display text-5xl leading-[1.05] font-semibold text-forest sm:text-7xl">
+            The cheapest quote isn&apos;t always the cheapest event.
+          </h1>
+          <p className="max-w-2xl text-lg leading-relaxed">
+            Describe your celebration and get a budget, timeline, vendor checklist and ideas in seconds. Then compare
+            vendor offers on what they actually include.
+          </p>
+          <div className="flex flex-wrap gap-3">
+            <Link
+              href="/new"
+              className="inline-flex min-h-11 items-center rounded-md bg-forest px-5 font-medium text-ivory hover:bg-emerald"
+            >
+              Plan my event
+            </Link>
+          </div>
+          <SampleLauncher />
+        </section>
 
-        <ol className="mt-12 grid gap-px overflow-hidden rounded-lg border border-cream bg-cream sm:grid-cols-3">
+        <ol className="grid gap-px overflow-hidden rounded-lg border border-cream bg-cream sm:grid-cols-3">
           {steps.map((step, index) => (
             <li key={step.verb} className="bg-ivory p-6">
               <p className="figures text-sm font-medium text-emerald">Step {index + 1}</p>
@@ -42,7 +84,21 @@ export default function LandingPage() {
           ))}
         </ol>
 
-        <p className="mt-10 border-l-4 border-saffron bg-sage px-4 py-3 text-sm text-forest">
+        <section aria-labelledby="live-sample" className="flex flex-col gap-4">
+          <h2 id="live-sample" className="font-display text-4xl font-semibold text-forest">
+            Two catering quotes, compared honestly
+          </h2>
+          <p className="max-w-2xl">
+            Shubh Rasoi looks cheaper at ₹850 a plate, but its tax, staff and transport are unknown. VendorLens shows
+            its known subtotal and refuses to call a winner until those are answered. (Fictional sample for 150 guests.)
+          </p>
+          <p className="rounded-md border-l-4 border-saffron bg-sage px-4 py-3 font-medium text-forest">
+            {comparison.verdict}
+          </p>
+          <CompareTable comparison={comparison} caption="Sample comparison of two fictional catering quotes" />
+        </section>
+
+        <p className="border-l-4 border-saffron bg-sage px-4 py-3 text-sm text-forest">
           Everything you enter stays in this browser. VendorLens doesn&apos;t verify vendors, make bookings or take
           payments.
         </p>

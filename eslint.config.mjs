@@ -19,6 +19,8 @@ export default defineConfig([
       "no-console": "error",
       "@typescript-eslint/consistent-type-imports": ["error", { fixStyle: "inline-type-imports" }],
       "@typescript-eslint/switch-exhaustiveness-check": "error",
+      // `onClick={() => setOpen(true)}` is idiomatic React; only flag void returns in block bodies.
+      "@typescript-eslint/no-confusing-void-expression": ["error", { ignoreArrowShorthand: true }],
     },
   },
 
@@ -27,7 +29,10 @@ export default defineConfig([
     files: ["src/domain/**"],
     rules: restrict([
       { group: ["react", "react-*", "next", "next/*"], message: "Domain code is framework-free." },
-      { group: ["@/*", "!@/domain/*"], message: "Domain code may only import other domain modules." },
+      {
+        group: ["@/server/*", "@/features/*", "@/ui/*", "@/lib/*", "@/app/*"],
+        message: "Domain code may only import other domain modules.",
+      },
       { group: ["@google/genai", "idb"], message: "Domain code performs no I/O." },
     ]),
   },
@@ -37,6 +42,9 @@ export default defineConfig([
     files: ["src/features/**", "src/ui/**", "src/lib/**"],
     rules: restrict([{ group: ["@/server/*"], message: "Use fetch('/api/…') instead of importing server modules." }]),
   },
+
+  // The structured logger is the one place allowed to write to stdout (Cloud Logging reads it).
+  { files: ["src/server/http/log.ts"], rules: { "no-console": "off" } },
 
   globalIgnores([".next/", "coverage/", "playwright-report/", "test-results/", "next-env.d.ts"]),
 ]);

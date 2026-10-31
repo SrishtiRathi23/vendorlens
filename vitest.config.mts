@@ -1,11 +1,11 @@
 import { resolve } from "node:path";
 import react from "@vitejs/plugin-react";
-import tsconfigPaths from "vite-tsconfig-paths";
 import { defineConfig } from "vitest/config";
 
 export default defineConfig({
-  plugins: [tsconfigPaths(), react()],
+  plugins: [react()],
   resolve: {
+    tsconfigPaths: true,
     // Next.js swaps `server-only` at build time; under Vitest it is replaced with an empty module.
     alias: { "server-only": resolve(import.meta.dirname, "tests/helpers/empty-module.ts") },
   },

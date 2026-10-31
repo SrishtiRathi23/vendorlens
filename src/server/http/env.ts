@@ -9,6 +9,8 @@ export interface AppConfig {
   aiEnabled: boolean;
   aiProvider: AiProvider;
   geminiModel?: string;
+  /** Tried once when the primary model is unavailable or out of quota. */
+  geminiFallbackModel?: string;
   gcpProject?: string;
   gcpLocation: string;
   geminiApiKey?: string;
@@ -34,6 +36,7 @@ const schema = z.object({
   AI_ENABLED: z.stringbool({ truthy: ["true"], falsy: ["false"] }).default(false),
   AI_PROVIDER: z.enum(["vertex", "developer", "fixture"]).default("vertex"),
   GEMINI_MODEL: text,
+  GEMINI_FALLBACK_MODEL: text,
   GOOGLE_CLOUD_PROJECT: text,
   GOOGLE_CLOUD_LOCATION: z.string().trim().min(1).max(60).default("global"),
   GEMINI_API_KEY: text,
@@ -86,6 +89,7 @@ export function readConfig(source: Readonly<Record<string, string | undefined>>)
     aiEnabled: raw.AI_ENABLED,
     aiProvider: raw.AI_PROVIDER,
     geminiModel: raw.GEMINI_MODEL,
+    geminiFallbackModel: raw.GEMINI_FALLBACK_MODEL,
     gcpProject: raw.GOOGLE_CLOUD_PROJECT,
     gcpLocation: raw.GOOGLE_CLOUD_LOCATION,
     geminiApiKey: raw.GEMINI_API_KEY,
