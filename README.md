@@ -6,6 +6,8 @@ VendorLens helps you plan a wedding, a birthday or a community event, and then c
 
 Built for PromptWars Virtual, Challenge 5: Celebration & Event Planner.
 
+**Live:** https://vendorlens-promptwars.web.app (Firebase Hosting in front of Cloud Run). Direct service URL: https://vendorlens-598370845591.asia-south1.run.app
+
 > **Where the build is: Phase 0 (deployable skeleton).** The planner, quote intake and comparison come in the next phases. This file lists only what exists and will grow into the full feature and evidence guide before submission.
 
 ## In the repository now
@@ -40,6 +42,7 @@ All configuration is described in [.env.example](.env.example).
 - [ADR 001: everything stays in the browser](docs/adr/001-local-first.md)
 - [ADR 002: the AI reads, the code computes](docs/adr/002-ai-reads-code-computes.md)
 - [ADR 003: Gemini without an API key](docs/adr/003-keyless-vertex.md)
+- [Build journal](docs/IMPLEMENTATION_LOG.md) · [Evidence checklist](docs/QA_EVIDENCE.md)
 
 ## License
 
