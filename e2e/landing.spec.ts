@@ -16,6 +16,7 @@ test.describe("deploy skeleton", () => {
       "x-content-type-options": "nosniff",
       "referrer-policy": "same-origin",
     });
+    expect(res?.headers()["content-security-policy"]).toMatch(/script-src 'self' 'nonce-[^']+' 'strict-dynamic'/);
     await expect(page.locator("h1")).toHaveCount(1);
     await expect(page.getByRole("heading", { level: 1 })).toContainText("cheapest quote");
 

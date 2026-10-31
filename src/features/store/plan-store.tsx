@@ -89,9 +89,8 @@ export function PlanProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const plan = state.plan;
-    if (!loaded.current || !plan) return;
-    const timer = setTimeout(() => void saveActivePlan(plan), 250);
-    return () => clearTimeout(timer);
+    // Saved on every change (an IndexedDB put is cheap), so a reload never loses the last edit.
+    if (loaded.current && plan) void saveActivePlan(plan);
   }, [state.plan]);
 
   const update = useCallback<PlanStore["update"]>((change, options) => {

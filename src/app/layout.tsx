@@ -19,6 +19,9 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = { themeColor: "#faf7ec" };
 
+// Rendered per request so the CSP nonce from src/proxy.ts can be applied to every script.
+export const dynamic = "force-dynamic";
+
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en-IN" className={`${grotesk.variable} ${cormorant.variable}`}>
