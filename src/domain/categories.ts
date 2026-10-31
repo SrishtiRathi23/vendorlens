@@ -32,11 +32,14 @@ export const EVENT_KIND_LABEL: Record<EventKind, string> = {
   community: "Community event",
 };
 
-/** Categories a plan for each kind of event must fund. */
+/**
+ * The minimum each kind of event must fund. Deliberately small: a birthday at home needs no venue,
+ * and a society festival on its own ground may not either, so the model is free to give them 0.
+ */
 export const REQUIRED_CATEGORIES: Record<EventKind, readonly CategoryKey[]> = {
-  wedding: ["venue", "catering", "decor", "photography"],
-  birthday: ["venue", "catering", "decor"],
-  community: ["venue", "misc"],
+  wedding: ["venue", "catering"],
+  birthday: ["catering"],
+  community: ["misc"],
 };
 
 /**

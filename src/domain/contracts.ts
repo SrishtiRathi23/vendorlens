@@ -66,7 +66,7 @@ export const PlanDraftAiSchema = z.object({
       priority: PrioritySchema,
     }),
     16,
-    3,
+    2,
   ),
   tasks: aiList(
     z.object({
@@ -78,7 +78,7 @@ export const PlanDraftAiSchema = z.object({
       dependsOn: aiList(aiText(4), 4),
     }),
     30,
-    4,
+    3,
   ),
   ideas: aiList(
     z.object({
@@ -89,7 +89,7 @@ export const PlanDraftAiSchema = z.object({
       dietTags: aiList(DietTagSchema, 7),
     }),
     24,
-    6,
+    4,
   ),
   dayOf: aiList(
     z.object({
@@ -99,7 +99,7 @@ export const PlanDraftAiSchema = z.object({
       ownerRole: aiText(40),
     }),
     20,
-    3,
+    2,
   ),
   assumptions: aiList(aiText(200), 6),
   openQuestions: aiList(aiText(200), 5),

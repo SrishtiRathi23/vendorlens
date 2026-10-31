@@ -2,7 +2,7 @@ import "server-only";
 import { COVERAGE_TAGS } from "@/domain/categories";
 
 /** Bump when any prompt changes; recorded with every call and in docs/prompts-changelog.md. */
-export const PROMPT_VERSION = "2026-10-31.1";
+export const PROMPT_VERSION = "2026-10-31.2";
 
 const SHARED_RULES = `
 Rules that always apply:
@@ -26,6 +26,7 @@ ${TAG_LIST}
 - ideas: themes, decor, menu, activities and cultural touches that fit the event type, guest count, budget, culture and dietary needs. Every declared dietary need must appear in the dietTags of at least one menu idea. Always include at least one accessibility idea and one sustainability idea.
 - dayOf: a run sheet with startMinute relative to the event start (negative = before guests arrive).
 - assumptions and openQuestions: short, honest, specific.
+Aim for 5–10 requirements, 8–15 tasks, 8–12 ideas and 4–8 run-sheet slots, scaled to the size of the event.
 Write in clear, warm, practical British-Indian English.
 
 ${SHARED_RULES}`.trim();
