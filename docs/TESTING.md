@@ -37,7 +37,7 @@ Tests never call the live model: unit tests inject a scripted generator or use `
 
 ## Live checks against the deployed service
 
-Through https://vendorlens-promptwars.web.app on 31 Oct 2026, revision `vendorlens-00003`:
+Through https://vendorlens-promptwars.web.app on 31 Oct 2026, revision `vendorlens-00005-lfl`:
 
 - **Drafts:** a wedding, a birthday and a community event each returned 200 on the first attempt, with no repair, in 7.8–10.3 s.
 - **Adjust:** 1.9 s. It declined to change a decided venue on its own, and code enforces the same rule.

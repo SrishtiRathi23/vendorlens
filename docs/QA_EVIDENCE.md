@@ -18,6 +18,6 @@
 | Accessibility | axe has 0 serious or critical findings on all routes, desktop and phone         | ✅    | `e2e/journeys.spec.ts`                                               |
 | Accessibility | Keyboard: skip link, focus on errors, Escape closes dialogs                     | ✅    | `e2e/*`                                                              |
 | Accessibility | Screen reader and 200% zoom pass                                                | ⚠️    | Not yet done by hand                                                 |
-| Deployment    | Cloud Run build and live health                                                 | ✅    | revision `vendorlens-00003-6c5`                                      |
+| Deployment    | Cloud Run build and live health                                                 | ✅    | revision `vendorlens-00005-lfl`                                      |
 | Deployment    | Firebase Hosting front door                                                     | ✅    | https://vendorlens-promptwars.web.app                                |
 | Alignment     | Live AI drafts for a wedding, a birthday and a community event                  | ✅    | `docs/TESTING.md`                                                    |

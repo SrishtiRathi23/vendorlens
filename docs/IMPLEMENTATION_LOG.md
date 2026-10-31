@@ -54,4 +54,4 @@ What each phase delivered, the commands that proved it, and what's still open. E
 | Live drafts sometimes failed validation                                 | Cloud Logging showed over-strict rules; required categories and list minimums relaxed (prompt 2026-10-31.2). All three kinds then succeeded on the first attempt |
 | Choosing "amount stated" for a cost set ₹0 before any amount was typed  | The cost stays unknown until a valid amount is entered                                                                                                           |
 
-**Evidence:** 123 unit tests (98.5% lines, 89.9% branches), 40 E2E journeys passing, 0 audit findings, clean secret scans. Live revision `vendorlens-00003-6c5` checked through Firebase Hosting; see [TESTING.md](TESTING.md#live-checks-against-the-deployed-service).
+**Evidence:** 123 unit tests (98.5% lines, 89.9% branches), 40 E2E journeys passing, 0 audit findings, clean secret scans. Live revision `vendorlens-00005-lfl` checked through Firebase Hosting; see [TESTING.md](TESTING.md#live-checks-against-the-deployed-service).
